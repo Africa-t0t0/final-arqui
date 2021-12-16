@@ -1,7 +1,8 @@
 
 from flask import Flask, request, send_file
 from PIL import ImageFilter, Image
-import base64, requests, psycopg2, os
+import base64, requests, psycopg2, os, time
+from io import BytesIO
 from werkzeug.wrappers import response
 app = Flask(__name__)
 
@@ -10,7 +11,7 @@ app = Flask(__name__)
 # DATABASE = os.environ.get('DATABASE')
 # USER = os.environ.get('USER')
 # PASSWORD = os.environ.get('PASSWORD')
-HOST = "192.168.0.10"
+HOST = "192.168.1.87"
 PORT = "5432"
 DATABASE = "examen"
 USER = "admin"
@@ -42,8 +43,27 @@ def recive():
     files = {'image': new}
     headers = {}
     response = requests.request("POST", url, data = payload, files = files)
+
     new.close()
-    return 'enviado desde 2'
+    conn = psycopg2.connect(
+            host= HOST,                    
+            port= PORT,
+            database= DATABASE,
+            user= USER,
+            password=PASSWORD)
+    cur = conn.cursor()
+    query1 = """CREATE TABLE IF NOT EXISTS imagenes (
+        id SERIAL PRIMARY KEY,
+        name VARCHAR,
+        filter VARCHAR,
+        created DATE DEFAULT CURRENT_DATE)"""
+    cur.execute(query1)
+    conn.commit()
+    query2 = """INSERT INTO imagenes (name, filter) VALUES (%s, %s);"""
+    values = (name, filter,)
+    cur.execute(query2, values)
+    conn.commit()
+    return 'enviado desde 2 y guardado en la base de datos'
 
 
 if __name__ == '__main__':
