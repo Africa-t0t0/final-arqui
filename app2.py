@@ -1,21 +1,12 @@
 
-from flask import Flask, request, send_file
+from flask import Flask, request, send_file, redirect, render_template, send_from_directory
 from PIL import ImageFilter, Image
-import base64, requests, psycopg2, os, time
+import base64, requests, os, time
 from io import BytesIO
 from werkzeug.wrappers import response
 app = Flask(__name__)
 
-# HOST = os.environ.get('HOST')
-# PORT = os.environ.get('PORT')
-# DATABASE = os.environ.get('DATABASE')
-# USER = os.environ.get('USER')
-# PASSWORD = os.environ.get('PASSWORD')
-HOST = "192.168.1.87"
-PORT = "5432"
-DATABASE = "examen"
-USER = "admin"
-PASSWORD = "admin"
+
 
 
 @app.route('/recive', methods=['POST'])
@@ -36,6 +27,10 @@ def recive():
         new = img.filter(ImageFilter.CONTOUR)
     elif filter == 'edge_enhance':
         new = img.filter(ImageFilter.EDGE_ENHANCE)
+    elif filter == 'edge_enhance_more':
+        new = img.filter(ImageFilter.EDGE_ENHANCE_MORE)
+    elif filter == 'emboss':
+        new = img.filter(ImageFilter.EMBOSS)
     new = new.save('new.jpg')
     new = open('new.jpg', 'rb')
     url = 'http://localhost:5000/recive'
@@ -43,28 +38,9 @@ def recive():
     files = {'image': new}
     headers = {}
     response = requests.request("POST", url, data = payload, files = files)
-
     new.close()
-    conn = psycopg2.connect(
-            host= HOST,                    
-            port= PORT,
-            database= DATABASE,
-            user= USER,
-            password=PASSWORD)
-    cur = conn.cursor()
-    query1 = """CREATE TABLE IF NOT EXISTS imagenes (
-        id SERIAL PRIMARY KEY,
-        name VARCHAR,
-        filter VARCHAR,
-        created DATE DEFAULT CURRENT_DATE)"""
-    cur.execute(query1)
-    conn.commit()
-    query2 = """INSERT INTO imagenes (name, filter) VALUES (%s, %s);"""
-    values = (name, filter,)
-    cur.execute(query2, values)
-    conn.commit()
-    return 'enviado desde 2 y guardado en la base de datos'
+    return '<img src="new.jpg" alt="User Image">'
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    app.run(host = '0.0.0.0' ,debug=True, port=5001)
