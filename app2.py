@@ -1,7 +1,7 @@
 
-from flask import Flask, request, send_file, redirect, render_template, send_from_directory
+from flask import Flask, request, send_from_directory
 from PIL import ImageFilter, Image
-import base64, requests, os, time
+import requests, os, time
 from io import BytesIO
 from werkzeug.wrappers import response
 app = Flask(__name__)
@@ -33,12 +33,11 @@ def recive():
         new = img.filter(ImageFilter.EMBOSS)
     new = new.save('new.jpg')
     new = open('new.jpg', 'rb')
-    url = 'http://localhost:5000/recive'
+    url = 'http://app1:5000/recive'
     payload = {'name': name, 'filter': filter}
     files = {'image': new}
     headers = {}
     response = requests.request("POST", url, data = payload, files = files)
-    # img.close()
     new.close()
     return send_from_directory(DOWNLOAD_DIRECTORY, path='new.jpg', as_attachment=True)
 
