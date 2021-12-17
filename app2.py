@@ -7,7 +7,7 @@ from werkzeug.wrappers import response
 app = Flask(__name__)
 
 
-
+DOWNLOAD_DIRECTORY = "./"
 
 @app.route('/recive', methods=['POST'])
 def recive():
@@ -38,8 +38,9 @@ def recive():
     files = {'image': new}
     headers = {}
     response = requests.request("POST", url, data = payload, files = files)
+    # img.close()
     new.close()
-    return '<img src="new.jpg" alt="User Image">'
+    return send_from_directory(DOWNLOAD_DIRECTORY, path='new.jpg', as_attachment=True)
 
 
 if __name__ == '__main__':
