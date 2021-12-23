@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: intento-helm
+spec:
+  selector:
+    app: intento-helm
+  ports:
+  - port: {{.Values.postgres}}
+    nodePort: {{.Values.postgresext}}
+    name: postgres
+  type: NodePort

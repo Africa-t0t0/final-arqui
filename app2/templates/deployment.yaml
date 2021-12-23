@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: app2
+spec:
+  selector:
+    matchLabels:
+      app: app2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: app2
+    spec:
+      containers:
+        - name: app2
+          image: snoopylord/final-arqui_app2
+          ports:
+            - containerPort: {{.Values.app2}}

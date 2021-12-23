@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: app1
+spec:
+  selector:
+    matchLabels:
+      app: app1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: app1
+    spec:
+      containers:
+        - name: app1
+          image: snoopylord/final-arqui_app1
+          ports:
+            - containerPort: {{.Values.app1}}
+          env:
+            - name: HOST
+              value: 'postgres'
+            - name: PORT
+              value: '5432'
+            - name: DATABASE
+              value: 'examen'
+            - name: USER
+              value: 'admin'
