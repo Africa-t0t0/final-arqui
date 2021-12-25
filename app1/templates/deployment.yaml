@@ -19,7 +19,7 @@ spec:
             - containerPort: {{.Values.app1}}
           env:
             - name: HOST
-              value: 'postgres'
+              value: localhost
             - name: PORT
               value: '5432'
             - name: DATABASE

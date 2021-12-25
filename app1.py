@@ -23,7 +23,7 @@ def send():
     name = request.form['name']
     image = request.files['image']
     filter = request.form['filter']
-    url = 'http://app2:5001/recive'
+    url = 'http://app2:30001/recive'
     payload = {'name': name, 'filter': filter}
     files = {'image': image}
     headers = {}
@@ -74,4 +74,4 @@ def query():
 
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0', debug=True, port=5000)
+    app.run(host = '0.0.0.0', debug=True, port=30000)

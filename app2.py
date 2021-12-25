@@ -33,7 +33,7 @@ def recive():
         new = img.filter(ImageFilter.EMBOSS)
     new = new.save('new.jpg')
     new = open('new.jpg', 'rb')
-    url = 'http://app1:5000/recive'
+    url = 'http://app1:30000/recive'
     payload = {'name': name, 'filter': filter}
     files = {'image': new}
     headers = {}
@@ -43,4 +43,4 @@ def recive():
 
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0' ,debug=True, port=5001)
+    app.run(host = '0.0.0.0' ,debug=True, port=30001)

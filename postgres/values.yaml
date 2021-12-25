@@ -1,2 +1,2 @@
-postgres: 5432
-postgresext: 5432
+postgres: 30002
+postgresext: 30002
